@@ -6,7 +6,6 @@
         #tabelaImpostos {
             font-family: calibri, sans-serif;
             border-collapse: collapse;
-            /*            width: 100%;*/
         }
         td, th {
             border: 3px solid #dddddd;
@@ -17,9 +16,20 @@
             background-color: #dfdbf9;
         }
         
+        
         .output{
             color: green;
+           
         }
+        .cdi{
+        color: red;
+        }
+        
+        .poupanca{
+        color: blue;
+        }
+        
+        
     </style>
     <body>  
         <div>
@@ -38,6 +48,9 @@
             $correcaoperiodo = "";
             $fgtstotal = "";
             $salariototalfgts ="";
+            
+            $cdi ="";
+            $poupanca ="";
             ?>
 
             <form method="post" action="">  
@@ -60,18 +73,22 @@
             $salario = isset($_POST['salario']) ? $_POST['salario'] : "";
             if (!empty($salario)) {
                 $sbrutototal = arredonda(13 * $salario * $periodo);
-		        $ferias = arredonda(($salario/3) + $salario);
-		        $feriastotal = arredonda((($salario/3) + $salario) * $periodo);
+		        $ferias = arredonda(($salario/3));
+		        $feriastotal = arredonda((($salario/3)) * $periodo);
 		        $sbrutototalferias = $sbrutototal + $feriastotal;
                 $fgtsmensal = arredonda(0.08 * $salario);
 		        $fgtsperiodo = arredonda($sbrutototalferias * 0.08);
-		        $correcaoperiodo = arredonda($fgtsperiodo * 0.036);
+		        $correcaoperiodo = arredonda($fgtsperiodo * 0.036 * $periodo);
 		        $fgtstotal = arredonda($fgtsperiodo + $correcaoperiodo);
 		        $salariototalfgts = arredonda($fgtstotal + $sbrutototalferias);
+		        
+		        $cdi = arredonda($fgtsperiodo * (0.0993 * $periodo));
+		        $poupanca = arredonda($fgtsperiodo * (0.0680 * $periodo));
             }
             ?>
+            
 
-        </div>
+        </div> 
         <div>
             <table id="tabelaImpostos">
                 <title></title>
@@ -80,7 +97,7 @@
                     <th>R$ <?php echo $salario; ?> </th>
                 </tr>
                 <tr>
-                    <td>Salario Bruto total no periodo:</td>
+                    <td>Salario Bruto total no periodo: </td>
                     <td class="output"><?php echo $sbrutototal; ?></td>
                 </tr>
                 <tr>
@@ -112,6 +129,17 @@
                     <td class="output"><?php echo $salariototalfgts; ?></td>                
                 </tr>
                 
+                 <tr>
+                    <td>Rendimento se tivesse sido aplicado na CDI </td>
+                    <td class="cdi"><?php echo $cdi; ?></td>                
+                </tr>
+                
+                     <tr>
+                    <td>Rendimento se tivesse sido aplicado na Poupanca </td>
+                    <td class="poupanca"><?php echo $poupanca; ?></td> 
+         
+                </tr>
+
                 <tr>
           
             </table>
